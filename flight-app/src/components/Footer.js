@@ -5,7 +5,7 @@ function Footer(){
         <div>
         {/*-- Footer-- -- */}
           <footer className="py-5 bg-dark">
-            <div className="container px-4 px-lg-5"><p className="m-0 text-center text-white">Copyright &copy; Your Website 2021</p></div>
+            <div className="container px-4 px-lg-5"><p className="m-0 text-center text-white">Copyright &copy; Flight App 2021</p></div>
         </footer>
     </div>
     );
