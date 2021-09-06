@@ -32,7 +32,7 @@ class App extends React.Component {
     return (
       <div className="App">
         <Nav navData={this.state.navData}></Nav>
-        <button className="btn btn-secondary" onClick={this.showForm}>Add a Flight</button>
+        <button className="btn btn-secondary m-3" onClick={this.showForm}>Add a Flight</button>
         {this.state.showForm === true ? 
         <AddForm showForm={this.showForm} addData={this.addData} data={this.state.data}></AddForm>
         :
