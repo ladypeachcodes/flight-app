@@ -11,7 +11,7 @@ import AddForm from './components/AddFlight';
 class App extends React.Component {
   constructor(props){
     super(props);
-    this.state = {navData: NavData, flightData : FlightData, showForm: false}
+    this.state = {navData: NavData, flightData : FlightData, showForm: false, ids : []}
     this.addData = this.addData.bind(this);
     this.showForm = this.showForm.bind(this);
   }
@@ -20,6 +20,11 @@ class App extends React.Component {
     let data = this.state.flightData;
     data.push(newData);
     this.setState({flightData: data});
+    let ids = [];
+    for (let item of this.state.flightData) {
+      ids.push(Number(item.id));
+      this.setState({ids});
+    }
 }
 
   showForm(){
@@ -34,7 +39,7 @@ class App extends React.Component {
         <Nav navData={this.state.navData}></Nav>
         <button className="btn btn-secondary m-3" onClick={this.showForm}>Add a Flight</button>
         {this.state.showForm === true ? 
-        <AddForm showForm={this.showForm} addData={this.addData} data={this.state.data}></AddForm>
+        <AddForm showForm={this.showForm} addData={this.addData} flightids={this.state.ids}></AddForm>
         :
         <FlightList flightData={this.state.flightData}></FlightList>
         }

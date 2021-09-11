@@ -19,7 +19,7 @@ class App extends React.Component{
         return(
             <div className="col-lg-12 text-center">
             <h1>React Forms Controlled Compnents</h1>
-            <Addform addData={this.addData} data={this.state.data}></Addform>
+            <Addform addData={this.addData}></Addform>
             <hr></hr>
             <ul>
                 {
@@ -72,7 +72,7 @@ class Addform extends React.Component{
             <input className="form-control" name="game" value={data.game} onChange={this.handleChange}></input>
             <label>Points:</label>
             <select className="form-control" name="points" defaultValue={data.points} onChange={this.handleChange}>
-            <option>5</option>
+            <option selected>5</option>
             <option>15</option>
             <option>25</option>
             <option>30</option>

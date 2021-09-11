@@ -2,52 +2,27 @@ import React from "react";
 
 //Child Component the form to add one record
 //controlled conponent
-const blankData =  {
-    "id":0,
-    "airline":"",
-    "flight_no":"",
-    "trip_type":"",
-    "departure_airport":"",
-    "arrival_airport":"",
-    "departure_date":"",
-    "return_date":""
-};
-const blankError =  {id: "", airline: "", flight_no:"", trip_type: "",
+const blankSlate =  { data: {id: 0, airline: "", flight_no:"", trip_type: "",
 departure_airport:"", arrival_airport:"", departure_date: "", 
-return_date: ""};
+return_date: ""}, error: {id: "", airline: "", flight_no:"", trip_type: "",
+departure_airport:"", arrival_airport:"", departure_date: "", 
+return_date: ""}};
 
 class AddForm extends React.Component{
     constructor(props){
         super(props);
-        this.state = {data : {
-            "id":0,
-            "airline":"",
-            "flight_no":"",
-            "trip_type":"",
-            "departure_airport":"",
-            "arrival_airport":"",
-            "departure_date":"",
-            "return_date":""
-        }, error : blankError};
+        this.state = blankSlate;
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.validate = this.validate.bind(this);
-        this.clearForm = this.clearForm.bind(this);
     }
 
-    validate() {
+    validate = () => {
         let error = {};
         let data = this.state.data;
-        for (let item of this.props.flightids) {
-            if (data.id === item) {
-                error['id'] = "Cannot have duplicate flight ids";
-                this.setState({error : error});
-            }
-        }
-        if (data['id'] < 1 || data['id'] > 99999 || !Number(data['id']))  {
-            error['id'] = "Please enter id as a unique number (1-5 digits)" + data.id;
+        if (data['id'] === 0 || !Number(data['id'])){
+            error['id'] = "Please enter id as a number value";
             this.setState({error : error});
-        }
+           }
         if (data['airline'] === "" || !String(data['airline'])){
                error['airline'] = "Please enter an airline";
                this.setState({error : error});
@@ -61,9 +36,9 @@ class AddForm extends React.Component{
                 this.setState({error : error});
            }
         if(data['departure_airport'] === data['arrival_airport']){
-              error['arrival_airport']  = "Make sure arrival airport and departure airport are different";
+              error['arrival_airport']  ="Make sure arrival airport and departure airport are different";
               this.setState({error : error});
-            }
+        }
         if(data['return_date'] < data['departure_date']){
                error['return_date'] = "Return Data Must be after departure date";
                error['departure_date'] = "Return Data Must be after departure date";
@@ -79,71 +54,51 @@ class AddForm extends React.Component{
 
     }
 
-    clearData(){
-        let data = {
-            "id":0,
-            "airline":"",
-            "flight_no":"",
-            "trip_type":"",
-            "departure_airport":"",
-            "arrival_airport":"",
-            "departure_date":"",
-            "return_date":""
-        };
-        this.setState({data});
-        console.log(this.state.data);
-        
-    }
-
     handleChange(event){
         let {name, value} = event.target;
-        blankData[name] = value;
-        let maxNum = Math.max(this.props.flightids);
-        if (blankData['id'] == 0 || blankData['id'] == "") {
-            blankData['id'] = maxNum + 1;
-        }
-        this.setState({data: blankData})
+        let data = this.state.data;
+        data[name] = value;
+        this.setState({data});
     }
 
-
-
-    handleSubmit(event){
+    handleSubmit = event =>{
         event.preventDefault();
-        this.setState({error: blankError});
-        var valid = this.validate();
+        const valid = this.validate();
         if(valid){
             this.props.addData(this.state.data);
-            this.clearData();
             this.props.showForm();
+            //clear form
+            this.setState(blankSlate);
         }
     }
     render(){
+        let data = this.state.data;
         let error = this.state.error;
         return(
             <div className="container">
-            <form id="addForm">
+            <form>
             <div className="row">
             <div className="col">
             <label>ID:</label>
-            <input className="form-control" min="1" max="5" type="int" onChange={this.handleChange} name="id">
+            <input className="form-control" min="1" max="5" onChange={this.handleChange}  type="number" name="id" value={data.id}>
             </input>
             <div className="invalid-feedback2">{error['id']}</div>
             </div>
             <div className="col">
             <label>Airline:</label>
-            <input className="form-control" name="airline" onChange={this.handleChange}>
+            <input className="form-control" name="airline" onChange={this.handleChange}  value={data.airline}>
             </input>
             <div className="invalid-feedback2">{error.airline}</div>
             </div>
             <div className="col">
             <label>Flight Number:</label>
-            <input className="form-control" name="flight_no" onChange={this.handleChange}>
+            <input className="form-control" name="flight_no" onChange={this.handleChange}  value={data.flight_no}>
             </input><div className="invalid-feedback2">{error.flight_no}</div></div>
             </div>
             <div className="row">
             <div className="col">
             <label>Trip Type:</label>
-            <select className="form-control" name="trip_type" onChange={this.handleChange}>
+            <select className="form-control" name="trip_type" onChange={this.handleChange}  value={data.trip_type}>
             <option>Select Type</option>
             <option>One Way</option>
             <option>Round Trip</option>
@@ -151,21 +106,21 @@ class AddForm extends React.Component{
             </select><div className="invalid-feedback2">{error.trip_type}</div></div>
             <div className="col">
             <label>Departure Airport:</label>
-            <input className="form-control" name="departure_airport" onChange={this.handleChange}>
+            <input className="form-control" name="departure_airport" onChange={this.handleChange}  value={data.departure_airport}>
             </input><div className="invalid-feedback2">{error.departure_airport}</div></div>
             <div className="col">
             <label>Arrival Airport:</label>
-            <input className="form-control" name="arrival_airport" onChange={this.handleChange}>
+            <input className="form-control" name="arrival_airport" onChange={this.handleChange}  value={data.arrival_airport}>
             </input><div className="invalid-feedback2">{error.arrival_airport}</div></div>
             </div>
             <div className="row">
             <div className="col">
             <label>Departure Date:</label>
-            <input className="form-control" type="date" name="departure_date" onChange={this.handleChange}>
+            <input className="form-control" type="date" name="departure_date" onChange={this.handleChange}  value={data.departure_date}>
             </input><div className="invalid-feedback2">{error.departure_date}</div></div>
             <div className="col">
             <label>Return Date:</label>
-            <input className="form-control" type="date" name="return_date" onChange={this.handleChange}>
+            <input className="form-control" type="date" name="return_date" onChange={this.handleChange} value={data.return_date}>
             </input><div className="invalid-feedback2">{error.return_date}</div></div>
             </div>
             <button type='submit' className="btn btn-success m-2" onClick={this.handleSubmit}>Submit</button>
