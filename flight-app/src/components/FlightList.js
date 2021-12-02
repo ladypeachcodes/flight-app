@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 
 function THead(){
     return(
@@ -34,8 +35,8 @@ function TBody(props) {
              <td> {flight.departure_date} </td>
              <td> {flight.return_date} </td>
              <td>
-             <a type="button" className="btn btn-success btn-just-icon btn-sm m-1" href={editUrl}>Edit</a>
-             <button className="btn btn-danger btn-just-icon btn-sm m-1" onClick={ ()=> deleteFlight(flight.id)}> Delete 
+             <Link type="button" className="btn btn-success btn-just-icon btn-sm m-1" to={editUrl}>Edit</Link>
+             <button className="btn btn-danger btn-just-icon btn-sm m-1" onClick={ ()=> props.deleteFlight(flight.id)}> Delete 
              </button> </td>
            </tr>
          );})
@@ -53,14 +54,12 @@ function  FlightList(props){
     <div className="table-responsive-sm">
     <table className="table table-striped table-bordered">
     <THead></THead>
-    <TBody flightData={props.flightData}></TBody>
+    <TBody flightData={props.flightData} deleteFlight = {props.deleteFlight}></TBody>
      </table>
      </div></div>
     )  
 }
 
-function deleteFlight(id) {
-    console.log("deleteFlight" + id);
-}
+
 
 export default FlightList;

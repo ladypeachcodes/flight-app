@@ -2,7 +2,7 @@ const FlightData =
 [
 	{
 		"id":1,
-		"airline":"United Airlines",
+		"airline":"unkno Airlines",
 		"flight_no":"UA1234",
 		"trip_type":"Round Trip",
 		"departure_airport":"ORD",

@@ -1,13 +1,7 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 
-function NavToggleResponsive(){
-    return(
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span className="navbar-toggler-icon"></span>
-        </button>
 
-    )
-}
 
 function NavMenu(props){
     return(
@@ -16,9 +10,9 @@ function NavMenu(props){
         {props.navData.map( (data, index)=>{
             return(  
             <li key={index} className="nav-item">
-            <a className={data.active === true ? "nav-link active" : "nav-link"} aria-current="page" href={data.url}>
+            <NavLink className={data.active === true ? "nav-link active" : "nav-link"} aria-current="page" to={data.url}>
             {data.text}
-            </a>
+            </NavLink>
             </li>
             );
         })
@@ -34,8 +28,6 @@ function Nav(props){
         {/*Navigation -- */}
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <div className="container px-5">
-            <a className="navbar-brand" href="#!">Flight App</a>
-            <NavToggleResponsive/>
             <NavMenu navData={props.navData}/>
         </div>
     </nav>

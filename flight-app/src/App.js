@@ -1,49 +1,114 @@
 import './App.css';
 import Nav from './components/Nav';
+import {BrowserRouter, Routes, Route} from "react-router-dom";
 import Footer from './components/Footer';
 import FlightList from './components/FlightList';
 import React from 'react';
 import NavData from './models/NavData';
-import FlightData from './models/FlightData';
-import AddForm from './components/AddFlight';
+// import FlightData from './models/FlightData';
+import AddForm from './components/AddFlightFunct';
+import EditForm from './components/EditFlight';
+import Home from './components/Home';
+import About from './components/About';
+const axios = require('axios').default;
+const apiUrl = 'https://flightscheduler.herokuapp.com/flights/';
 
 
-class App extends React.Component {
+
+ class App extends React.Component {
   constructor(props){
     super(props);
-    this.state = {navData: NavData, flightData : FlightData, showForm: false, ids : []}
+    this.state = {navData: NavData, flightData : {}, showForm: false, ids : []}
     this.addData = this.addData.bind(this);
-    this.showForm = this.showForm.bind(this);
+    this.update = this.update.bind(this);
+    this.deleteFlight = this.deleteFlight.bind(this);
   }
 
-  addData(newData){
+//   componentDidMount(){
+//     this.getData();
+//  }
+//  async getData(){
+//   const res = await axios.get(apiUrl);
+//   const { data } = await res;
+//   this.setState({flighData: data})
+// }
+
+  componentDidMount = async()=>{
+    await axios.get('https://flightscheduler.herokuapp.com/flights/')
+    .then(res =>{
+      this.setState({flightData: res.data});
+    }).catch(function (error) {
+      console.log(error);
+    });
+  }
+
+
+  addData = async(newData)=>{
+    await axios.post(apiUrl, {newData}).then(res =>{
+      console.log(res.data);
+      let data = this.state.flightData;
+      data.push(res.data);
+      this.setState({flightData: data});
+    }).catch(function (error) {
+      console.log(error);
+    });
+    let ids = [];
+    axios.get(apiUrl).then(res=>{
+      for (let item of res.data) {
+        ids.push(Number(item.id));
+        this.setState({ids});}
+    })
+}
+deleteFlight = async(id)=> {
+  await axios.delete(apiUrl+id).then(function (response) {
+  console.log(response);
+  let flightData = this.state.flightData;
+  let index = flightData.findIndex(flight => flight.id == id);
+  flightData.splice(index, 1);
+  this.setState({flightData});
+  })
+  .catch(function (error) {
+    console.log(error);
+  })
+}
+
+update(newData, index){
+  axios.put(apiUrl+ index, {newData}).then(function (response) {
+    console.log(response);
     let data = this.state.flightData;
-    data.push(newData);
+    data[index] = response.data;
     this.setState({flightData: data});
     let ids = [];
     for (let item of this.state.flightData) {
       ids.push(Number(item.id));
-      this.setState({ids});
-    }
+      this.setState({ids});}
+  })
+  .catch(function (error) {
+    console.log(error);
+  })
 }
-
-  showForm(){
-    //TODO fix toggle
-    console.log("function called");
-    this.setState({showForm : !this.state.showForm});
-  }
 
   render() {
     return (
-      <div className="App">
-        <Nav navData={this.state.navData}></Nav>
-        <button className="btn btn-secondary m-3" onClick={this.showForm}>Add a Flight</button>
-        {this.state.showForm === true ? 
-        <AddForm showForm={this.showForm} addData={this.addData} flightids={this.state.ids}></AddForm>
-        :
-        <FlightList flightData={this.state.flightData}></FlightList>
-        }
-        <Footer></Footer>
+      <div className="App"> 
+      <BrowserRouter>
+      <Nav navData={this.state.navData}></Nav>
+      <Routes>
+        <Route path="/" element={<Home/>}></Route>
+        <Route path="/edit/:id" element={<EditForm flightData={this.state.flightData} update={this.update}></EditForm>}> </Route>
+        {/* <Route path="/edit/:id" 
+              //  render= { ({match}) => <EditForm flights={this.state.flightData} update = {this.update} id={match.params.id} />}
+              element= { ({match}) => <EditForm flights={this.state.flightData} update = {this.update} id={match.params.id} />}
+        > </Route> */}
+        <Route path="/about" element={<About/>}>
+        </Route>
+        <Route path="/flights" element={<FlightList flightData={this.state.flightData} deleteFlight = {this.deleteFlight}/>}>
+        </Route>
+        <Route path="/add" element={<AddForm addData={this.addData} flightids={this.state.ids}></AddForm>}>
+          </Route>
+      </Routes>
+      </BrowserRouter>
+      <Footer></Footer>
       </div>
     );
   }

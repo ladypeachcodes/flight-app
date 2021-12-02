@@ -32,7 +32,7 @@ class AddForm extends React.Component{
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.validate = this.validate.bind(this);
-        this.clearForm = this.clearForm.bind(this);
+        this.clearData = this.clearData.bind(this);
     }
 
     validate() {
@@ -112,9 +112,10 @@ class AddForm extends React.Component{
         this.setState({error: blankError});
         var valid = this.validate();
         if(valid){
-            this.props.addData(this.state.data);
+            let temp = {};
+            let newData = Object.assign(temp, this.state.data);
+            this.props.addData(temp);
             this.clearData();
-            this.props.showForm();
         }
     }
     render(){
