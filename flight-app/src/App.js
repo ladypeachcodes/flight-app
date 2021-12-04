@@ -58,7 +58,7 @@ class App extends React.Component {
 
   addData = (newData) => {
     // axios.post(apiUrl, { newData } )
-    axios.post(apiUrl, newData)
+    axios.post( apiUrl, newData )
       .then(res => {
         console.log(res.data);
         this.getData();
@@ -92,8 +92,8 @@ class App extends React.Component {
       })
   }
 
-  update(newData, index) {
-    axios.put(apiUrl + index, newData)
+  update(newData, id) {
+    axios.put( apiUrl + id, newData )
       .then(response => {
         console.log(response);
         this.getData();
