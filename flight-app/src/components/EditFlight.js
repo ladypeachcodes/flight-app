@@ -19,7 +19,7 @@ export default function AddForm(props) {
             return_date: flight.return_date }});
     
     const onSubmit = data => {
-        props.update(data, index);
+        props.update(data, id);
         navigate("/flights");
     }
 
